@@ -1,3 +1,6 @@
+from sys import argv
+
+
 def word_probability(file):
     file = open(file)
     words = file.read().split(" ")
@@ -52,4 +55,8 @@ def classify(sample_a_filename, sample_b_filename, target_filename):
         selection_probability, selection))
 
 
-classify("a.txt", "b.txt", "c.txt")
+def main():
+    script, a, b, target = argv
+    classify(a, b, target)
+
+main()
