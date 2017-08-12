@@ -20,19 +20,34 @@ def sample_probability(probabilities, target):
     return p_value
 
 
+def file_probability(filename, target_filename):
+    return sample_probability(word_probability(filename), target_filename)
+
+
+def normalise_probabilities(a, b):
+    total = a + b
+    return {'a': a / total, 'b': b / total}
+
+
 def classify(sample_a_filename, sample_b_filename, target_filename):
-    sample_a_probabilities = word_probability(sample_a_filename)
-    sample_b_probabilities = word_probability(sample_b_filename)
-    sample_a_likelihood = sample_probability(sample_a_probabilities, target_filename)
-    sample_b_likelihood = sample_probability(sample_b_probabilities, target_filename)
-    print(sample_a_likelihood)
-    print(sample_b_likelihood)
-    if sample_a_likelihood == sample_b_likelihood:
-        print("Even chance")
-    elif sample_a_likelihood > sample_b_likelihood:
-        print("Sample A")
+    sample_a = file_probability(sample_a_filename, target_filename)
+    sample_b = file_probability(sample_b_filename, target_filename)
+    normalised = normalise_probabilities(sample_a, sample_b)
+
+    if normalised['a'] == normalised['b']:
+        print("No classification is possible")
+        return
+    elif normalised['a'] > normalised['b']:
+        selection = "Sample A"
+        selection_probability = normalised['a']
     else:
-        print("Sample B")
+        selection = "Sample B"
+        selection_probability = normalised['b']
+
+    selection_probability = round(selection_probability * 100, 2)
+
+    print("There is a {0}% chance that the target text was written by {1}.".format(
+        selection_probability, selection))
+
 
 classify("a.txt", "b.txt", "c.txt")
-
