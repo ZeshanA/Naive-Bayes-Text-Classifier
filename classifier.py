@@ -12,11 +12,13 @@ def word_probability(file):
 
 
 def sample_probability(probabilities, target):
-    target_text = open(target).read().split(" ")
+    target = open(target)
+    target_text = target.read().split(" ")
     p_value = 1
     for word in target_text:
         if word in probabilities:
             p_value *= probabilities[word]
+    target.close()
     return p_value
 
 
